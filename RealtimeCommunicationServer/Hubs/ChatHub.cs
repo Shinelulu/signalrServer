@@ -24,15 +24,24 @@ namespace RealtimeCommunicationServer.Hubs
             return base.OnDisconnectedAsync(exception);
         }
 
-        public async Task ConfirmUser(string userName)
+        public async Task ConfirmLogin(string userName, string type)
         {
             Members.AddMember(userName, Context.ConnectionId);
-            await Clients.All.SendAsync("receiveMessage", DateTime.Now + $"：用户【{userName}】已连接至工具管理系统");
+            await Groups.AddToGroupAsync(Context.ConnectionId, type);
+            await Clients.Caller.SendAsync("receiveMessage", DateTime.Now + $"：【{type}】用户【{userName}】已连接至工具管理系统");
+        }
+
+        public async Task ConfirmLogout(string userName, string type)
+        {
+            Members.RemoveMember(userName);
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, type);
+            await Clients.Caller.SendAsync("closeConnection", DateTime.Now + $"：【{type}】用户【{userName}】退出工具管理系统");
         }
 
         public async Task SendMessage(string message)
         {
             await Clients.All.SendAsync("receiveMessage", DateTime.Now + $"：{message}");
+            
         }
     }
 }

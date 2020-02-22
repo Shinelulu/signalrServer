@@ -28,9 +28,16 @@ namespace RealtimeCommunicationServer.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostApiResponse(string report)
+        public async Task<IActionResult> PostApiResponse(object report)
         {
             await hubContext.Clients.All.SendAsync("receiveMessage", DateTime.Now + "：来自Web Api的接口调用");
+            return Ok();
+        }
+
+        [HttpPost("task")]
+        public async Task<IActionResult> PostTaskApi(object task)
+        {
+            await hubContext.Clients.Group("中间系统").SendAsync("receiveMessage", DateTime.Now + "：来自上级系统下发的任务", task);
             return Ok();
         }
     }

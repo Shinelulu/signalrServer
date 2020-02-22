@@ -7,7 +7,7 @@ namespace RealtimeCommunicationServer.Hubs
 {
     public class Members
     {
-		private static Dictionary<string,string> allMembers;
+		private static Dictionary<string, string> allMembers = new Dictionary<string, string>();
 
 		public static void AddMember(string user, string id)
 		{
@@ -22,6 +22,12 @@ namespace RealtimeCommunicationServer.Hubs
 				return allMembers[user];
 			else
 				return null;
+		}
+
+		public static void RemoveMember(string user)
+		{
+			if (allMembers.ContainsKey(user))
+				allMembers.Remove(user);
 		}
 	}
 }
