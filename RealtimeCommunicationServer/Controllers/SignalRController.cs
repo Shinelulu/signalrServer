@@ -40,5 +40,19 @@ namespace RealtimeCommunicationServer.Controllers
             await hubContext.Clients.Group("中间系统").SendAsync("receiveMessage", DateTime.Now + "：来自上级系统下发的任务", task);
             return Ok();
         }
+
+        [HttpPost("scheme")]
+        public async Task<IActionResult> PostSchemeApi(object scheme)
+        {
+            await hubContext.Clients.Group("下级系统").SendAsync("receiveMessage", DateTime.Now + "：来自中间系统下发的方案", scheme);
+            return Ok();
+        }
+
+        [HttpPost("report")]
+        public async Task<IActionResult> PostReportApi(object report)
+        {
+            await hubContext.Clients.Group("中间系统").SendAsync("receiveMessage", DateTime.Now + "：来自下级系统上报的信息", report);
+            return Ok();
+        }
     }
 }
